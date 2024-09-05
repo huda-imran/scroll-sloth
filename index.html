@@ -35,9 +35,9 @@
             <!-- Featured NFT Section -->
             <div class="featured-nft">
                 <div class="nft-card">
-                    <div class="card-shadow"></div> <!-- New shadow layer -->
+                    <div class="card-shadow"></div>
                     <div class="card-overlay">
-                        <img src="images/sloth2.jpg" alt="NFT Card 1">
+                        <img src="images/NFT.jpeg" alt="NFT Card 1">
                         <div class="card-details">
                             <h2>Scroll Sloth Drop</h2>
                             <p>Exclusive Sloth NFT Release</p>
@@ -48,7 +48,6 @@
         </div>
     </section>
     
-
     <!-- Mint NFT Section -->
     <section class="mint-nft-section">
         <div class="container mint-nft-container">
@@ -59,6 +58,14 @@
         </div>
     </section>
 
+    <!-- Notification Modal -->
+    <div id="notification-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="notification-message">Your message here...</p>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="container footer-container">
@@ -66,5 +73,163 @@
             <a href="https://twitter.com" target="_blank" class="footer-link">Follow us on X</a>
         </div>
     </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script>
+        // Network details for the Scroll Network
+        const scrollNetwork = {
+            chainId: '0x82750', // Example: Change this to the actual Scroll chainId in hex
+            chainName: 'Scroll',
+            nativeCurrency: {
+                name: 'Scroll Ether',
+                symbol: 'ETH',
+                decimals: 18
+            },
+            rpcUrls: ['https://rpc.scroll.io'], // Example: Replace with Scroll's actual RPC URL
+            blockExplorerUrls: ['https://scrollscan.com'] // Example: Replace with Scroll's block explorer URL
+        };
+
+        // const scrollNetwork = {
+        //     chainId: '0x8274f', // Example: Change this to the actual Scroll chainId in hex
+        //     chainName: 'Scroll Sepolia Testnet',
+        //     nativeCurrency: {
+        //         name: 'Scroll Ether',
+        //         symbol: 'ETH',
+        //         decimals: 18
+        //     },
+        //     rpcUrls: ['https://sepolia-rpc.scroll.io'], // Example: Replace with Scroll's actual RPC URL
+        //     blockExplorerUrls: ['https://sepolia.scrollscan.com/'] // Example: Replace with Scroll's block explorer URL
+        // };
+
+
+        let userAccount;
+
+        const connectButton = document.querySelector('.connect-wallet');
+        const mintButton = document.querySelector('.mint-button');
+        const modal = document.getElementById('notification-modal');
+        const modalMessage = document.getElementById('notification-message');
+        const closeModalButton = document.querySelector('.close');
+
+        // Function to show notification modal
+        function showNotification(message) {
+            modalMessage.textContent = message;
+            modal.style.display = 'block';
+        }
+
+        // Close modal event
+        closeModalButton.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Function to update UI after connecting
+        function updateUIOnConnect(account) {
+            connectButton.innerText = 'Connected: ' + account.substring(0, 6) + '...';
+            mintButton.disabled = false;
+        }
+
+        // Function to reset UI to the disconnected state
+        function resetUIOnDisconnect() {
+            connectButton.innerText = 'Connect Wallet';
+            mintButton.disabled = true;
+        }
+
+        // Function to switch or add Scroll Network
+        async function switchToScrollNetwork() {
+            try {
+                const currentChainId = await ethereum.request({ method: 'eth_chainId' });
+                if (currentChainId !== scrollNetwork.chainId) {
+                    await ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: scrollNetwork.chainId }]
+                    });
+                }
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    try {
+                        await ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [scrollNetwork]
+                        });
+                    } catch (addError) {
+                        console.error('Failed to add Scroll Network:', addError);
+                    }
+                } else {
+                    console.error('Failed to switch to Scroll Network:', switchError);
+                }
+            }
+        }
+
+        // Function to connect MetaMask
+        async function connectMetaMask() {
+            try {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                userAccount = accounts[0];
+                updateUIOnConnect(userAccount);
+                await switchToScrollNetwork();
+            } catch (error) {
+                console.error('Error connecting to MetaMask:', error);
+            }
+        }
+
+        // Function to mint NFT
+        async function mintNFT() {
+            if (!userAccount) {
+                showNotification('Please connect your wallet first!');
+                return;
+            }
+
+            // Add the logic to call the smart contract function `safeMint`
+            const web3 = new Web3(window.ethereum);
+            const contractAddress = '0xdF8cA310c7B3aB79919B61697f94764d03f1c837'; // Replace with your contract address
+            //const contractAddress = '0x86d70eB1E9f06A8F67873d0f6020d378C35a389B';
+            const contractABI = [{
+                "inputs": [],
+                "name": "safeMint",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            }]; // Replace with your contract ABI
+            const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+            try {
+                await contract.methods.safeMint().send({ from: userAccount, value: web3.utils.toWei('0.0004', 'ether') });
+                showNotification('Minting successful!');
+            } catch (error) {
+                console.error('Minting failed:', error);
+                showNotification('Minting failed. Please try again.');
+            }
+        }
+
+        // Event listener for the connect wallet button
+        connectButton.addEventListener('click', connectMetaMask);
+
+        // Event listener for the mint button
+        mintButton.addEventListener('click', mintNFT);
+
+        // Listen for account changes
+        ethereum.on('accountsChanged', (accounts) => {
+            if (accounts.length > 0) {
+                userAccount = accounts[0];
+                updateUIOnConnect(userAccount);
+            } else {
+                resetUIOnDisconnect();
+            }
+        });
+
+        // Listen for network changes
+        ethereum.on('chainChanged', (chainId) => {
+            if (chainId !== scrollNetwork.chainId) {
+                resetUIOnDisconnect();
+                alert('Please switch to the Scroll Network.');
+            }
+        });
+    </script>
 </body>
 </html>

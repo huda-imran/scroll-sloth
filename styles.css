@@ -314,3 +314,43 @@ footer {
         max-width: 300px; /* Optional: Set a maximum width */
     }
 }
+
+/* Notification Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Darker black with more opacity for a smoother background */
+}
+
+.modal-content {
+    background-color: #1B3B1A; /* Deep green background to match the minting info */
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #6FCF97; /* Soft teal border to complement hover effects */
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 400px; /* Maximum width for content */
+    border-radius: 15px; /* Match rounded corners from minting section */
+    text-align: center; /* Centered text */
+    color: #ECD9BB; /* Light beige text for readability */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.close {
+    color: #ECD9BB; /* Light beige color for close button */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #FFD700; /* Gold color on hover and focus to match emphasis */
+    text-decoration: none;
+    cursor: pointer;
+}
