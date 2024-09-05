@@ -52,6 +52,7 @@ button {
     cursor: pointer;
     font-size: 18px; /* Font size for button text */
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Comic Neue', cursive;
 }
 
 button:hover {
@@ -157,12 +158,14 @@ button:hover {
 
 .card-details h2 {
     font-size: 24px;
-    color: #ECD9BB; /* Light beige text */
     margin-bottom: 10px;
+    font-family: 'Comic Neue', cursive; /* Comical, fun font */
+    color: #FFD700;
 }
 
 .card-details p {
     font-size: 16px;
+    font-family: 'Comic Neue', cursive;
     color: #ECD9BB; /* Light beige text */
 }
 
@@ -195,14 +198,14 @@ button:hover {
 
 .mint-nft-container h2 {
     font-size: 26px; /* Slightly larger font size for main heading */
-    color: #ECD9BB; /* Light beige text for contrast */
     margin-bottom: 15px;
 }
 
 .mint-nft-container p {
-    font-size: 16px;
+    font-size: 20px;
     color: #ECD9BB; /* Light beige text for readability */
     margin-bottom: 20px;
+    font-family: 'Comic Neue', cursive;
 }
 
 /* Enhanced Input Styles */
@@ -224,6 +227,8 @@ button:hover {
     outline: none; /* Remove default focus outline */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Increase shadow on focus */
 }
+
+
 
 .mint-button {
     padding: 12px 30px; /* Larger padding for a bigger button */
@@ -353,4 +358,35 @@ footer {
     color: #FFD700; /* Gold color on hover and focus to match emphasis */
     text-decoration: none;
     cursor: pointer;
+}
+
+
+/* Vivid Heading Style */
+.vivid-heading {
+    font-family: 'Comic Neue', cursive; /* Comical, fun font */
+    font-size: 48px; /* Larger font size for emphasis */
+    color: #FFD700; /* Bright gold color for visibility */
+    text-align: center; /* Center the heading */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    margin-bottom: 20px; /* Space below the heading */
+    transition: transform 0.2s ease, color 0.2s ease; /* Smooth transitions for hover effects */
+    animation: bounce 2s infinite; /* Adding a bounce animation */
+}
+
+.vivid-heading:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    color: #6FCF97; /* Change color on hover */
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
 }

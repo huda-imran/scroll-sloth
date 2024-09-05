@@ -28,9 +28,24 @@
             <div class="minting-info">
                 <h2>Embrace laziness, capture creativity.</h2>
                 <p>Welcome to the whimsical world of Scroll Sloths! This unique NFT collection celebrates the art of laziness and creativity, featuring adorable sloth characters each with their own personality and charm. Collect your favorite sloths and become part of an exclusive community that embraces a laid-back lifestyle.</p>
+                
+                <!-- New Content: Eligibility for Badge and Benefits -->
+                <h3>Eligibility for Lazy Sloth Badge</h3>
+                <p>To be eligible for the Lazy Sloth Badge, you must own a Lazy Sloth NFT. Owning this NFT automatically makes you eligible for the badge, which will provide benefits during events organized by the Lazy Art Hub.</p>
+                
+                <h3>Lazy Sloth NFT Benefits</h3>
+                <p>Having this NFT automatically makes you badge eligible. The Lazy Sloth NFT will be beneficial in events organized by Lazy Art Hub.</p>
+            
                 <h3>Mint Your Own NFT</h3>
                 <p>Anyone can mint their own Scroll Sloth NFT! When you mint, you'll not only get a fantastic sloth character but also become eligible to claim a special badge on the Scroll Network. Show off your membership with pride!</p>
+                
+                <!-- New Content: Minting Events -->
+                <h3>Minting Events</h3>
+                <p>A specific amount of Scroll Sloth NFTs will be distributed to participants in minted events. Join us and be a part of the lazy yet creative journey with Lazy Sloth NFTs!</p>
+            
+                <h2 class="vivid-heading">Lazy... Mint 💤💤💤</h2>
             </div>
+            
     
             <!-- Featured NFT Section -->
             <div class="featured-nft">
@@ -40,7 +55,6 @@
                         <img src="images/NFT.jpeg" alt="NFT Card 1">
                         <div class="card-details">
                             <h2>Scroll Sloth Drop</h2>
-                            <p>Exclusive Sloth NFT Release</p>
                         </div>
                     </div>
                 </div>
@@ -51,9 +65,10 @@
     <!-- Mint NFT Section -->
     <section class="mint-nft-section">
         <div class="container mint-nft-container">
-            <h2>Mint Your Scroll Sloth NFT</h2>
+            <h2 class="vivid-heading">Mint Your Lazy Sloth NFT💤💤💤</h2>
             <p>Select the quantity and click "Mint" to mint your NFTs.</p>
-            <input type="number" min="1" max="3" value="1" class="mint-quantity" />
+            <p>Price per token is 0.0004 ETH</p>
+            <input type="number" id="mint-quantity" min="1" value="1" class="mint-quantity" />
             <button class="mint-button">Mint</button>
         </div>
     </section>
@@ -69,8 +84,8 @@
     <!-- Footer -->
     <footer>
         <div class="container footer-container">
-            <a href="https://discord.com" target="_blank" class="footer-link">Join us on Discord</a>
-            <a href="https://twitter.com" target="_blank" class="footer-link">Follow us on X</a>
+            <a href="https://discord.com/invite/GPqQpavpt6" target="_blank" class="footer-link">Join us on Discord</a>
+            <a href="https://x.com/Scrollsloth" target="_blank" class="footer-link">Follow us on X</a>
         </div>
     </footer>
 
@@ -111,9 +126,12 @@
         const modalMessage = document.getElementById('notification-message');
         const closeModalButton = document.querySelector('.close');
 
-        // Function to show notification modal
-        function showNotification(message) {
-            modalMessage.textContent = message;
+        // Function to show notification modal with transaction link
+        function showNotification(message, txHash = null) {
+            if (txHash) {
+                message += ` <a href="${scrollNetwork.blockExplorerUrls[0]}/tx/${txHash}" target="_blank">View Transaction</a>`;
+            }
+            modalMessage.innerHTML = message; // Use innerHTML to allow for link insertion
             modal.style.display = 'block';
         }
 
@@ -127,7 +145,6 @@
                 modal.style.display = 'none';
             }
         }
-
         // Function to update UI after connecting
         function updateUIOnConnect(account) {
             connectButton.innerText = 'Connected: ' + account.substring(0, 6) + '...';
@@ -185,25 +202,41 @@
                 return;
             }
 
+            const quantity = document.getElementById('mint-quantity').value;
+            if (quantity <= 0) {
+                showNotification('Please enter a valid quantity.');
+                return;
+            }
+
             // Add the logic to call the smart contract function `safeMint`
             const web3 = new Web3(window.ethereum);
-            const contractAddress = '0xdF8cA310c7B3aB79919B61697f94764d03f1c837'; // Replace with your contract address
+            const contractAddress = '0xaC530146E8522FF038e6855BaDb402288cB6d69b'; // Replace with your contract address
             //const contractAddress = '0x86d70eB1E9f06A8F67873d0f6020d378C35a389B';
             const contractABI = [{
-                "inputs": [],
-                "name": "safeMint",
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "quantity",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "safeMintBatch",
                 "outputs": [],
                 "stateMutability": "payable",
                 "type": "function"
-            }]; // Replace with your contract ABI
+            }]; 
             const contract = new web3.eth.Contract(contractABI, contractAddress);
 
             try {
-                await contract.methods.safeMint().send({ from: userAccount, value: web3.utils.toWei('0.0004', 'ether') });
-                showNotification('Minting successful!');
+                // Calculate the total cost
+                const totalCost = web3.utils.toWei((0.0004 * quantity).toString(), 'ether');
+
+                // Call the safeMintBatch function with the quantity
+                const transaction = await contract.methods.safeMintBatch(quantity).send({ from: userAccount, value: totalCost });
+                showNotification('Minting successful!', transaction.transactionHash);
             } catch (error) {
                 console.error('Minting failed:', error);
-                showNotification('Minting failed. Please try again.');
+                showNotification('Minting failed. Please try again.', error.receipt?.transactionHash);
             }
         }
 
