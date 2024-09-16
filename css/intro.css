@@ -1,0 +1,172 @@
+/* Global Styles for the Intro Page */
+
+@font-face {
+    font-family: 'Kemco Pixel';
+    src: url('/assets/fonts/Kemco\ Pixel\ Bold.ttf') format('woff2'), url('/assets/fonts/Kemco\ Pixel\ Bold.ttf') format('truetype');
+}
+
+html,
+body {
+    height: 100%;
+    /* Make sure the body and HTML fill the full height of the viewport */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Kemco Pixel', sans-serif;
+    background-image: url('/assets/images/forest.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #000000;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    /* Flexbox layout for body */
+    min-height: 100vh;
+    /* Ensure body always fills at least the full height */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex: 1;
+    /* Let the container grow to fill available space */
+}
+
+
+/* Header Styles */
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    height: 60px;
+}
+
+header {
+    background: linear-gradient(to right, #FFFFFF, #A8D5BA, #0E7A27);
+    border-bottom: 2px solid #0E7A27;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+}
+
+.site-logo img {
+    max-width: 70px;
+    height: auto;
+}
+
+
+/* Intro Section */
+
+.intro-section {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 15px;
+    margin: 40px auto;
+    max-width: 1000px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid #0E7A27;
+    z-index: 2;
+    position: relative;
+}
+
+.intro-image {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.intro-container h1 {
+    font-size: 36px;
+    color: #0E7A27;
+    margin-bottom: 20px;
+}
+
+.intro-container p {
+    font-size: 18px;
+    color: #000000;
+    margin-bottom: 30px;
+}
+
+
+/* Mint Button */
+
+.mint-button {
+    padding: 12px 40px;
+    background-color: #0E7A27;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-family: 'Kemco Pixel', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.mint-button:hover {
+    background-color: #FFFFFF;
+    color: #0E7A27;
+    border: 2px solid #0E7A27;
+    transform: scale(1.05);
+}
+
+
+/* Footer Styles */
+
+footer {
+    background-color: #000000;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 2px solid #56A44E;
+    width: 100%;
+    color: #FFFFFF;
+    font-size: 18px;
+    margin-top: auto;
+    /* Ensures footer sticks to the bottom when there's not enough content */
+}
+
+.footer-link {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #56A44E;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .intro-section {
+        padding: 30px 10px;
+    }
+    .intro-image {
+        width: 90%;
+    }
+    .mint-button {
+        padding: 10px 30px;
+        font-size: 16px;
+    }
+}
